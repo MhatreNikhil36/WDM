@@ -1,12 +1,20 @@
-FROM node:18-alpine
+# server/Dockerfile
+FROM node:16
 
+# Create and set the working directory
 WORKDIR /app
 
-COPY package*.json ./
+# Copy only package.json and package-lock.json first for better caching
+COPY package*.json /app/
 
-RUN npm install --legacy-peer-deps
+# Install dependencies
+RUN npm install
 
-COPY . .
+# Copy the rest of the server code
+COPY . /app
 
+# Expose the port on which your server runs
 EXPOSE 5000
-CMD ["npm", "start"] 
+
+# Start the application
+CMD ["npm", "run", "start"]

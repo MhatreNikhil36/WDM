@@ -10,7 +10,7 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const [users] = await pool.query("SELECT * FROM Users WHERE email = ?", [
+    const [users] = await pool.query("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
 
@@ -61,7 +61,7 @@ export const registerUser = async (req, res) => {
 
   try {
     const [existingUsers] = await pool.query(
-      "SELECT id FROM Users WHERE email = ?",
+      "SELECT id FROM users WHERE email = ?",
       [email]
     );
 
@@ -70,7 +70,7 @@ export const registerUser = async (req, res) => {
     }
 
     await pool.query(
-      `INSERT INTO Users (first_name, last_name, email, password_hash, date_of_birth, gender, height_cm, weight_kg, country)
+      `INSERT INTO users (first_name, last_name, email, password_hash, date_of_birth, gender, height_cm, weight_kg, country)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         first_name,
@@ -95,7 +95,7 @@ export const getUserProfile = async (req, res) => {
   const userId = req.userId;
 
   try {
-    const [rows] = await pool.query("SELECT * FROM Users WHERE id = ?", [
+    const [rows] = await pool.query("SELECT * FROM users WHERE id = ?", [
       userId,
     ]);
 
@@ -125,7 +125,7 @@ export const updateUserProfile = async (req, res) => {
 
   try {
     await pool.query(
-      `UPDATE Users SET
+      `UPDATE users SET
         first_name = ?, last_name = ?, date_of_birth = ?, weight_kg = ?, height_cm = ?,
         gender = ?, city = ?, state = ?, country = ?
       WHERE id = ?`,

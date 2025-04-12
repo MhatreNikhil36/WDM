@@ -1,21 +1,19 @@
 version: '3.8'
 
 services:
-  # Frontend service (React)
+  # Frontend service (Production - served by Nginx)
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: Dockerfile  # Use the production server stage (Nginx)
     ports:
-      - "3000:80"  # Map host port 3000 to container port 80 (served by Nginx)
-    volumes:
-      - ./:/app
-      - /app/node_modules
+      - "3000:80"           # Map host port 3000 to container port 80
     depends_on:
       - server
+      - db
     environment:
       - REACT_APP_API_URL=http://localhost:5000
-      - NODE_ENV=development
+    # Do not mount volumes in production to keep the built files intact
     healthcheck:
       test: ["CMD", "npm", "list", "axios"]
       interval: 30s
@@ -36,8 +34,8 @@ services:
       - db
     environment:
       - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=knv2382
+      - DB_USER=ft_appuser
+      - DB_PASSWORD=StrongPassword123!
       - DB_NAME=fitness_tracker
       - DB_PORT=3306
       - JWT_SECRET=secret123
@@ -49,7 +47,7 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=knv2382
+      - MYSQL_ROOT_PASSWORD=StrongPassword123
       - MYSQL_DATABASE=fitness_tracker
     volumes:
       - mysql_data:/var/lib/mysql
